@@ -76,7 +76,7 @@ target_include_directories(libvoxelbot
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../s2client-api/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../s2client-api/examples/common> # TODO: Remove?
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../s2client-api/contrib/SDL-mirror/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../cereal/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cereal/include>
         src/generated
 )
 
@@ -88,4 +88,8 @@ target_include_directories(libvoxelbot
 
 
 create_executable(test_combat_simulator "libvoxelbot/combat/simulator.test.cpp")
+create_executable(test_build_optimizer "libvoxelbot/buildorder/optimizer.test.cpp")
 create_executable(cache_mappings "libvoxelbot/caching/caching.cpp")
+create_executable(example_combat_simulator "examples/combat_simulator.cpp")
+create_executable(example_combat_simulator2 "examples/combat_simulator2.cpp")
+create_executable(example_build_optimizer "examples/build_optimizer.cpp")

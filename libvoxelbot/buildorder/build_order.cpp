@@ -1,8 +1,18 @@
 #include <libvoxelbot/buildorder/build_order.h>
 #include <libvoxelbot/buildorder/build_state.h>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 using namespace sc2;
+
+static string timeStr(float time) {
+    stringstream ss;
+    int sec = (int)(fmod(time, 60.0f));
+    ss << (int)(time / 60.0f) << ":" << (sec < 10 ? "0" : "") << sec;
+    return ss.str();
+}
+
 
 void printBuildOrderDetailed(const BuildState& startState, const BuildOrder& buildOrder, const vector<bool>* highlight) {
     BuildState state = startState;
@@ -55,4 +65,62 @@ void printBuildOrder(const BuildOrder& buildOrder) {
             cout << UpgradeIDToName(buildOrder[i].upgradeID()) << endl;
         }
     }
+}
+
+std::string BuildOrder::toString() {
+    stringstream ss;
+    for (size_t i = 0; i < items.size(); i++) {
+        ss << setw(3) << i << " ";
+        if (items[i].isUnitType()) {
+            ss << UnitTypeToName(items[i].typeID());
+        } else {
+            ss << UpgradeIDToName(items[i].upgradeID());
+        }
+        ss << endl;
+    }
+    return ss.str();
+}
+
+static const string ChronoBoostColor = "\x1b[48;2;0;105;179m";
+
+std::string BuildOrder::toString(BuildState initialState, BuildOrderPrintMode mode) {
+    stringstream ss;
+    if (mode == BuildOrderPrintMode::Brief) {
+        bool success = initialState.simulateBuildOrder(*this, [&](int i) {
+            if (items[i].chronoBoosted) {
+                // Color the text
+                ss << ChronoBoostColor;
+            }
+
+            string name = items[i].isUnitType() ? UnitTypeToName(items[i].typeID()) : UpgradeIDToName(items[i].upgradeID());
+            ss << setw(3) << i << " " << timeStr(initialState.time) << " " << name;
+
+            // Reset color
+            ss << "\033[0m";
+            ss << endl;
+        });
+        ss << (success ? "Done at " : "Failed at ") << initialState.time << endl;
+    } else {
+        // Detailed
+        ss << "    Time Food  Min. Ves. Name" << endl;
+        bool success = initialState.simulateBuildOrder(*this, [&](int i) {
+            if (items[i].chronoBoosted) {
+                // Color the text
+                ss << ChronoBoostColor;
+            }
+
+            string name = items[i].isUnitType() ? UnitTypeToName(items[i].typeID()) : UpgradeIDToName(items[i].upgradeID());
+            ss << setw(3) << i << " " << timeStr(initialState.time) << " ";
+            ss << (initialState.foodCap() - initialState.foodAvailable()) << "/" << initialState.foodCap() << " ";
+            ss << setw(4) << (int)initialState.resources.minerals << " " << setw(4) << (int)initialState.resources.vespene << " ";
+            // ss << " food: " << (initialState.foodCap() - initialState.foodAvailable()) << "/" << initialState.foodCap() << " resources: " << (int)initialState.resources.minerals << "+" << (int)initialState.resources.vespene;
+            ss << name;
+
+            // Reset color
+            ss << "\033[0m";
+            ss << endl;
+        });
+        ss << (success ? "Done at " : "Failed at ") << timeStr(initialState.time) << endl;
+    }
+    return ss.str();
 }

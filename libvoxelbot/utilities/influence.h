@@ -109,7 +109,4 @@ struct InfluenceMap {
     sc2::Point2DI samplePointFromProbabilityDistribution() const;
 
     void print() const;
-
-    void render(int x0, int y0) const;
-    void renderNormalized(int x0, int y0) const;
 };

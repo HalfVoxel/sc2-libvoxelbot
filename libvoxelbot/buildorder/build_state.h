@@ -173,7 +173,6 @@ public:
 
     BuildState() {}
     explicit BuildState(std::vector<std::pair<sc2::UNIT_TYPEID, int>> unitCounts);
-
     explicit BuildState(const sc2::ObservationInterface* observation, sc2::Unit::Alliance alliance, sc2::Race race, BuildResources resources, float time);
 
     uint64_t hash() const {

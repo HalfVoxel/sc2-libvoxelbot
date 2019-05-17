@@ -39,7 +39,7 @@ struct CombatState {
 
 	// Owner with the highest total health summed over all units
 	int owner_with_best_outcome() const;
-	std::string str();
+	std::string toString();
 };
 
 struct CombatResult {

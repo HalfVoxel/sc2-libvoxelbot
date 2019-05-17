@@ -12,19 +12,23 @@
 #include <libvoxelbot/common/unit_lists.h>
 #include <libvoxelbot/combat/combat_environment.h>
 #include <sstream>
+#include <iomanip>
 #include <chrono>
 
 using namespace std;
 using namespace sc2;
 
-string CombatState::str() {
+string CombatState::toString() {
     stringstream ss;
+    ss << "Owner Unit       Health" << endl;
+    ss << std::setprecision(0) << std::fixed; 
     for (auto& u : units) {
-        ss << u.owner << ": " << getUnitData(u.type).name << " " << u.health << "+" << u.shield << "/" << u.health_max << "+" << u.shield_max << endl;
+        ss << std::left << setw(5) << u.owner << " " << setw(10) << getUnitData(u.type).name << " ";
+        if (u.shield_max > 0) ss << u.health << "+" << u.shield << "/" << u.health_max << "+" << u.shield_max << endl;
+        else ss << std::right << setw(3) << u.health << "/" << u.health_max << endl;
     }
     return ss.str();
 }
-
 
 void CombatRecordingFrame::add(UNIT_TYPEID type, int owner, float health, float shield) {
     for (size_t i = 0; i < healths.size(); i++) {

@@ -839,11 +839,15 @@ BuildOrder findBestBuildOrderGenetic(const std::vector<std::pair<sc2::UNIT_TYPEI
 BuildOrder findBestBuildOrderGenetic(const BuildState& startState, const vector<pair<sc2::UNIT_TYPEID, int>>& target, const BuildOrder* seed, BuildOptimizerParams params) {
     auto target2 = vector<pair<BuildOrderItem, int>>(target.size());
     for (size_t i = 0; i < target.size(); i++) target2[i] = { BuildOrderItem(target[i].first), target[i].second };
-    return findBestBuildOrderGenetic(startState, target2, seed, params).first;
+    return findBestBuildOrderGeneticWithFitness(startState, target2, seed, params).first;
 }
 
 /** Finds the best build order using an evolutionary algorithm */
-pair<BuildOrder, BuildOrderFitness> findBestBuildOrderGenetic(const BuildState& startState, const vector<pair<BuildOrderItem, int>>& target, const BuildOrder* seed, BuildOptimizerParams params) {
+BuildOrder findBestBuildOrderGenetic(const BuildState& startState, const vector<pair<BuildOrderItem, int>>& target, const BuildOrder* seed, BuildOptimizerParams params) {
+    return findBestBuildOrderGeneticWithFitness(startState, target, seed, params).first;
+}
+
+std::pair<BuildOrder, BuildOrderFitness> findBestBuildOrderGeneticWithFitness(const BuildState& startState, const std::vector<std::pair<BuildOrderItem, int>>& target, const BuildOrder* seed, BuildOptimizerParams params) {
     const AvailableUnitTypes& availableUnitTypes = getAvailableUnitsForRace(startState.race, UnitCategory::BuildOrderOptions);
     const AvailableUnitTypes& allEconomicUnits = getAvailableUnitsForRace(startState.race, UnitCategory::Economic);
 

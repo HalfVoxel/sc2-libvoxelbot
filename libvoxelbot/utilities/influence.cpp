@@ -442,17 +442,7 @@ void InfluenceMap::print() const {
     }
 }
 
-const int scale = 2;
-void InfluenceMap::render(int x0, int y0) const {
-    ImageGrayscale((double*)weights.data(), w, h, scale * x0 * (w + 5), scale * y0 * (h + 5), scale, false);
-}
-
-/** Renders a map, assuming it is in the [0,1] range */
-void InfluenceMap::renderNormalized(int x0, int y0) const {
-    ImageGrayscale((double*)weights.data(), w, h, scale * x0 * (w + 5), scale * y0 * (h + 5), scale, true);
-}
-
-default_random_engine generator(time(0));
+static default_random_engine generator(time(0));
 
 /** Sample a point from this influence map.
  * The probability of picking each cell is proportional to its weight.

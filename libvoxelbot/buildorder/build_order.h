@@ -2,6 +2,8 @@
 #include <vector>
 #include "sc2api/sc2_interfaces.h"
 
+struct BuildState;
+
 static const int UPGRADE_ID_OFFSET = 1000000;
 struct BuildOrderItem {
   public:
@@ -45,6 +47,11 @@ struct BuildOrderItem {
     }
 };
 
+enum class BuildOrderPrintMode {
+    Brief,
+    Detailed
+};
+
 struct BuildOrder {
     std::vector<BuildOrderItem> items;
 
@@ -79,6 +86,14 @@ struct BuildOrder {
     inline const BuildOrderItem& operator[] (int index) const {
         return items[index];
     }
+
+    std::vector<const BuildOrderItem>::iterator begin() const { return items.begin(); }
+	std::vector<const BuildOrderItem>::iterator end() const { return items.end(); }
+    std::vector<BuildOrderItem>::iterator begin() { return items.begin(); }
+	std::vector<BuildOrderItem>::iterator end() { return items.end(); }
+
+    std::string toString();
+    std::string toString(BuildState initialState, BuildOrderPrintMode mode = BuildOrderPrintMode::Brief);
 };
 
 

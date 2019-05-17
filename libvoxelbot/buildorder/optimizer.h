@@ -53,7 +53,8 @@ std::pair<BuildOrder, std::vector<bool>> expandBuildOrderWithImplicitSteps (cons
 
 BuildOrder findBestBuildOrderGenetic(const std::vector<std::pair<sc2::UNIT_TYPEID, int>>& startingUnits, const std::vector<std::pair<sc2::UNIT_TYPEID, int>>& target);
 BuildOrder findBestBuildOrderGenetic(const BuildState& startState, const std::vector<std::pair<sc2::UNIT_TYPEID, int>>& target, const BuildOrder* seed = nullptr, BuildOptimizerParams params = BuildOptimizerParams());
-std::pair<BuildOrder, BuildOrderFitness> findBestBuildOrderGenetic(const BuildState& startState, const std::vector<std::pair<BuildOrderItem, int>>& target, const BuildOrder* seed = nullptr, BuildOptimizerParams params = BuildOptimizerParams());
+std::pair<BuildOrder, BuildOrderFitness> findBestBuildOrderGeneticWithFitness(const BuildState& startState, const std::vector<std::pair<BuildOrderItem, int>>& target, const BuildOrder* seed = nullptr, BuildOptimizerParams params = BuildOptimizerParams());
+BuildOrder findBestBuildOrderGenetic(const BuildState& startState, const std::vector<std::pair<BuildOrderItem, int>>& target, const BuildOrder* seed = nullptr, BuildOptimizerParams params = BuildOptimizerParams());
 void unitTestBuildOptimizer();
 void printBuildOrderDetailed(const BuildState& startState, const BuildOrder& buildOrder, const std::vector<bool>* highlight = nullptr);
 void optimizeExistingBuildOrder(const sc2::ObservationInterface* observation, const std::vector<const sc2::Unit*>& ourUnits, const BuildState& buildOrderStartingState, BuildOrderTracker& buildOrder, bool serialize);

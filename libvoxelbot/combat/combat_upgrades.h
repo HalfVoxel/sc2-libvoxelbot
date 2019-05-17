@@ -24,6 +24,10 @@ struct CombatUpgrades {
 
 	CombatUpgrades();
 
+	CombatUpgrades(std::initializer_list<sc2::UPGRADE_ID> upgrades) {
+		for (auto u : upgrades) add(u);
+	}
+
 	bool hasUpgrade(sc2::UPGRADE_ID upgrade) const;
 
 	uint64_t hash() const {
