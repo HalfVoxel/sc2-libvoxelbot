@@ -64,12 +64,12 @@ void Matrix1BPP(const char* bytes, int w_mat, int h_mat, int off_x, int off_y, i
     assert(window_);
 
     SDL_Rect rect = CreateRect(0, 0, px_w, px_h);
-    for (size_t y = 0; y < h_mat; ++y) {
-        for (size_t x = 0; x < w_mat; ++x) {
+    for (int y = 0; y < h_mat; ++y) {
+        for (int x = 0; x < w_mat; ++x) {
             rect.x = off_x + (int(x) * rect.w);
             rect.y = off_y + (int(y) * rect.h);
 
-            size_t index = x + y * w_mat;
+            int index = x + y * w_mat;
             unsigned char mask = 1 << (7 - (index % 8));
             unsigned char data = bytes[index / 8];
             bool value = (data & mask) != 0;
@@ -90,13 +90,13 @@ void Matrix8BPPHeightMap(const char* bytes, int w_mat, int h_mat, int off_x, int
     assert(window_);
 
     SDL_Rect rect = CreateRect(0, 0, px_w, px_h);
-    for (size_t y = 0; y < h_mat; ++y) {
-        for (size_t x = 0; x < w_mat; ++x) {
+    for (int y = 0; y < h_mat; ++y) {
+        for (int x = 0; x < w_mat; ++x) {
             rect.x = off_x + (int(x) * rect.w);
             rect.y = off_y + (int(y) * rect.h);
 
             // Renders the height map in grayscale [0-255]
-            size_t index = x + y * w_mat;
+            int index = x + y * w_mat;
             SDL_SetRenderDrawColor(renderer_, bytes[index], bytes[index], bytes[index], 255);
             SDL_RenderFillRect(renderer_, &rect);
         }
@@ -109,12 +109,12 @@ void Matrix8BPPPlayers(const char* bytes, int w_mat, int h_mat, int off_x, int o
     assert(window_);
 
     SDL_Rect rect = CreateRect(0, 0, px_w, px_h);
-    for (size_t y = 0; y < h_mat; ++y) {
-        for (size_t x = 0; x < w_mat; ++x) {
+    for (int y = 0; y < h_mat; ++y) {
+        for (int x = 0; x < w_mat; ++x) {
             rect.x = off_x + (int(x) * rect.w);
             rect.y = off_y + (int(y) * rect.h);
 
-            size_t index = x + y * w_mat;
+            int index = x + y * w_mat;
             switch (bytes[index]) {
                 case 0:
                     SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);

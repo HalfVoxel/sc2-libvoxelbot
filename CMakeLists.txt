@@ -20,8 +20,41 @@ project(libvoxelbot)
 # include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/s2client-api/contrib/SDL-mirror/include")
 # include_directories("s2client-api/contrib/SDL-mirror/include")
 
+function (create_test project_name mainfile)
+	# TODO: The .h files don't seem to be necessary (think only .cpp files should be included here anyway)
+    add_executable(${project_name} ${mainfile})
+
+    # Sets the grouping in IDEs like visual studio (last parameter is the group name)
+    set_target_properties(${project_name} PROPERTIES FOLDER target)
+
+	if (MSVC)
+		# set_target_properties(${project_name} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:libcmt;libconcrt")
+	endif ()
+
+    target_link_libraries(${project_name} sc2api sc2lib sc2utils pybind11::embed libvoxelbot)
+endfunction ()
+
 # Note: trying to add SDL2-static as the extra_libs parameter here causes pybind11 modules to fail to link (for unknown reasons, maybe PIC related?)
-file (GLOB libvoxelbot_sources "libvoxelbot/buildorder/*.cpp" "libvoxelbot/combat/*.cpp" "libvoxelbot/utilities/*.cpp" "libvoxelbot/generated/*.cpp" "libvoxelbot/common/*.cpp")
+set(libvoxelbot_sources
+    "libvoxelbot/buildorder/build_order.cpp"
+    "libvoxelbot/buildorder/build_state.cpp"
+    "libvoxelbot/buildorder/build_time_estimator.cpp"
+    "libvoxelbot/buildorder/optimizer.cpp"
+    "libvoxelbot/buildorder/tracker.cpp"
+    "libvoxelbot/combat/combat_environment.cpp"
+    "libvoxelbot/combat/combat_upgrades.cpp"
+    "libvoxelbot/combat/simulator.cpp"
+    "libvoxelbot/common/unit_lists.cpp"
+    "libvoxelbot/generated/abilities.cpp"
+    "libvoxelbot/utilities/influence.cpp"
+    "libvoxelbot/utilities/mappings.cpp"
+    "libvoxelbot/utilities/pathfinding.cpp"
+    "libvoxelbot/utilities/predicates.cpp"
+    "libvoxelbot/utilities/profiler.cpp"
+    "libvoxelbot/utilities/python_utils.cpp"
+    "libvoxelbot/utilities/renderer.cpp"
+    "libvoxelbot/utilities/unit_data_caching.cpp"
+)
 
 add_library(libvoxelbot ${libvoxelbot_sources})
 
@@ -51,3 +84,6 @@ target_include_directories(libvoxelbot
     PUBLIC
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/../s2client-api/generated>
 )
+
+
+create_test(test_combat_simulator "libvoxelbot/combat/simulator.test.cpp")
