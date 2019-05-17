@@ -12,22 +12,22 @@
 using namespace std;
 using namespace sc2;
 
-vector<vector<UNIT_TYPEID>> mAbilityToCasterUnit;
-vector<UNIT_TYPEID> mAbilityToCreatedUnit;
-vector<UPGRADE_ID> mAbilityToUpgrade;
-vector<vector<UNIT_TYPEID>> mCanBecome;
-vector<vector<UNIT_TYPEID>> mHasBeen;
-vector<vector<ABILITY_ID>> mUnitTypeHasAbilities;
-vector<UnitTypeData> mUnitTypes;
-vector<AbilityData> mAbilities;
-vector<UpgradeData> mUpgrades;
-vector<bool> mIsStationary;
-vector<bool> mIsStructure;
+static vector<vector<UNIT_TYPEID>> mAbilityToCasterUnit;
+static vector<UNIT_TYPEID> mAbilityToCreatedUnit;
+static vector<UPGRADE_ID> mAbilityToUpgrade;
+static vector<vector<UNIT_TYPEID>> mCanBecome;
+static vector<vector<UNIT_TYPEID>> mHasBeen;
+static vector<vector<ABILITY_ID>> mUnitTypeHasAbilities;
+static vector<UnitTypeData> mUnitTypes;
+static vector<AbilityData> mAbilities;
+static vector<UpgradeData> mUpgrades;
+static vector<bool> mIsStationary;
+static vector<bool> mIsStructure;
 
-vector<UPGRADE_ID> mUpgradeUpgradeDependency;
-vector<UNIT_TYPEID> mUpgradeUnitDependency;
+static vector<UPGRADE_ID> mUpgradeUpgradeDependency;
+static vector<UNIT_TYPEID> mUpgradeUnitDependency;
 
-bool mappingInitialized = false;
+static bool mappingInitialized = false;
 
 UNIT_TYPEID canonicalize(UNIT_TYPEID unitType) {
     const UnitTypeData& unitTypeData = getUnitData(unitType);
@@ -258,9 +258,6 @@ void init() {
         sort(mCanBecome[i].begin(), mCanBecome[i].end(), [&](UNIT_TYPEID a, UNIT_TYPEID b) {
             return unitTypes[(int)a].mineral_cost + unitTypes[(int)a].vespene_cost < unitTypes[(int)b].mineral_cost + unitTypes[(int)b].vespene_cost;
         });
-        // for (auto p : mCanBecome[i])
-        // cout << UnitTypeToName(p) << " (" << unitTypes[(int)p].mineral_cost << ", " << unitTypes[(int)p].vespene_cost << "), ";
-        // cout << endl;
     }
 
     Weapon bc1;
@@ -380,279 +377,16 @@ bool isStationary(UNIT_TYPEID type) {
     return mIsStationary[(int)type];
 }
 
-vector<UNIT_TYPEID> emptyVector;
+static vector<UNIT_TYPEID> emptyVector;
 
 /** Maps an ability to the unit that primarily uses it.
- * In particular this is defined for BUILD_* and TRAIN_* abilities.
+ * E.g. ABILITY_ID::BUILD_BUNKER -> UNIT_TYPEID::TERRAN_SCV
  */
 const std::vector<UNIT_TYPEID>& abilityToCasterUnit(ABILITY_ID ability) {
     if ((int)ability >= (int)mAbilityToCasterUnit.size()) return emptyVector;
 
     assert((int)ability < (int)mAbilityToCasterUnit.size());
     return mAbilityToCasterUnit[(int)ability];
-    /*
-    switch (ability) {
-        case ABILITY_ID::RESEARCH_HISECAUTOTRACKING:
-        case ABILITY_ID::RESEARCH_TERRANSTRUCTUREARMORUPGRADE:
-        case ABILITY_ID::RESEARCH_TERRANINFANTRYWEAPONS:
-        case ABILITY_ID::RESEARCH_TERRANINFANTRYARMOR:
-            return { UNIT_TYPEID::TERRAN_ENGINEERINGBAY };
-        case ABILITY_ID::RESEARCH_INFERNALPREIGNITER:
-        case ABILITY_ID::RESEARCH_RAPIDFIRELAUNCHERS:
-        case ABILITY_ID::RESEARCH_SMARTSERVOS:
-        case ABILITY_ID::RESEARCH_DRILLINGCLAWS:
-        case ABILITY_ID::RESEARCH_BANSHEEHYPERFLIGHTROTORS:
-            return { UNIT_TYPEID::TERRAN_FACTORYTECHLAB };
-        case ABILITY_ID::RESEARCH_STIMPACK:
-        case ABILITY_ID::RESEARCH_COMBATSHIELD:
-        case ABILITY_ID::RESEARCH_CONCUSSIVESHELLS:
-            return { UNIT_TYPEID::TERRAN_BARRACKSTECHLAB };
-        case ABILITY_ID::RESEARCH_TERRANSHIPWEAPONS:
-        case ABILITY_ID::RESEARCH_TERRANVEHICLEANDSHIPPLATING:
-        case ABILITY_ID::RESEARCH_TERRANVEHICLEWEAPONS:
-            return { UNIT_TYPEID::TERRAN_ARMORY };
-        case ABILITY_ID::RESEARCH_HIGHCAPACITYFUELTANKS:
-        case ABILITY_ID::RESEARCH_RAVENCORVIDREACTOR:
-        case ABILITY_ID::RESEARCH_ADVANCEDBALLISTICS:
-        case ABILITY_ID::RESEARCH_BANSHEECLOAKINGFIELD:
-            return { UNIT_TYPEID::TERRAN_STARPORTTECHLAB };
-        case ABILITY_ID::RESEARCH_BATTLECRUISERWEAPONREFIT:
-            return { UNIT_TYPEID::TERRAN_FUSIONCORE };
-        case ABILITY_ID::RESEARCH_PERSONALCLOAKING:
-            return { UNIT_TYPEID::TERRAN_GHOSTACADEMY };
-        case ABILITY_ID::MORPH_PLANETARYFORTRESS:
-        case ABILITY_ID::MORPH_ORBITALCOMMAND:
-            return { UNIT_TYPEID::TERRAN_COMMANDCENTER };
-        case ABILITY_ID::BUILD_ARMORY:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_ASSIMILATOR:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_BANELINGNEST:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_BARRACKS:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_BUNKER:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_COMMANDCENTER:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_CREEPTUMOR:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::BUILD_CREEPTUMOR_QUEEN:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::BUILD_CREEPTUMOR_TUMOR:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::BUILD_CYBERNETICSCORE:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_DARKSHRINE:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_ENGINEERINGBAY:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_EVOLUTIONCHAMBER:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_EXTRACTOR:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_FACTORY:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_FLEETBEACON:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_FORGE:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_FUSIONCORE:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_GATEWAY:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_GHOSTACADEMY:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_HATCHERY:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_HYDRALISKDEN:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_INFESTATIONPIT:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_INTERCEPTORS:
-            return { UNIT_TYPEID::PROTOSS_CARRIER };
-        case ABILITY_ID::BUILD_MISSILETURRET:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_NEXUS:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_NUKE:
-            return { UNIT_TYPEID::TERRAN_GHOSTACADEMY };
-        case ABILITY_ID::BUILD_NYDUSNETWORK:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::BUILD_NYDUSWORM:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::BUILD_PHOTONCANNON:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_PYLON:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_REACTOR:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::BUILD_REACTOR_BARRACKS:
-            return { UNIT_TYPEID::TERRAN_BARRACKS };
-        case ABILITY_ID::BUILD_REACTOR_FACTORY:
-            return { UNIT_TYPEID::TERRAN_FACTORY };
-        case ABILITY_ID::BUILD_REACTOR_STARPORT:
-            return { UNIT_TYPEID::TERRAN_STARPORT };
-        case ABILITY_ID::BUILD_REFINERY:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_ROACHWARREN:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_ROBOTICSBAY:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_ROBOTICSFACILITY:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_SENSORTOWER:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_SHIELDBATTERY:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_SPAWNINGPOOL:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_SPINECRAWLER:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_SPIRE:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_SPORECRAWLER:
-            return { UNIT_TYPEID::ZERG_DRONE };
-        case ABILITY_ID::BUILD_STARGATE:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_STARPORT:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_STASISTRAP:
-            return { UNIT_TYPEID::PROTOSS_ORACLE };
-        case ABILITY_ID::BUILD_SUPPLYDEPOT:
-            return { UNIT_TYPEID::TERRAN_SCV };
-        case ABILITY_ID::BUILD_TECHLAB:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::BUILD_TECHLAB_BARRACKS:
-            return { UNIT_TYPEID::TERRAN_BARRACKS };
-        case ABILITY_ID::BUILD_TECHLAB_FACTORY:
-            return { UNIT_TYPEID::TERRAN_FACTORY };
-        case ABILITY_ID::BUILD_TECHLAB_STARPORT:
-            return { UNIT_TYPEID::TERRAN_STARPORT };
-        case ABILITY_ID::BUILD_TEMPLARARCHIVE:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_TWILIGHTCOUNCIL:
-            return { UNIT_TYPEID::PROTOSS_PROBE };
-        case ABILITY_ID::BUILD_ULTRALISKCAVERN:
-            return { UNIT_TYPEID::ZERG_DRONE };
-
-        case ABILITY_ID::MORPH_GREATERSPIRE:
-            return { UNIT_TYPEID::ZERG_SPIRE };
-
-        case ABILITY_ID::TRAINWARP_ADEPT:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAINWARP_DARKTEMPLAR:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAINWARP_HIGHTEMPLAR:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAINWARP_SENTRY:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAINWARP_STALKER:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAINWARP_ZEALOT:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAIN_ADEPT:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAIN_BANELING:
-            return { UNIT_TYPEID::ZERG_BANELING };
-        case ABILITY_ID::TRAIN_BANSHEE:
-            return { UNIT_TYPEID::TERRAN_STARPORTTECHLAB };
-        case ABILITY_ID::TRAIN_BATTLECRUISER:
-            return { UNIT_TYPEID::TERRAN_STARPORTTECHLAB };
-        case ABILITY_ID::TRAIN_CARRIER:
-            return { UNIT_TYPEID::PROTOSS_STARGATE };
-        case ABILITY_ID::TRAIN_COLOSSUS:
-            return { UNIT_TYPEID::PROTOSS_ROBOTICSFACILITY };
-        case ABILITY_ID::TRAIN_CORRUPTOR:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_CYCLONE:
-            return { UNIT_TYPEID::TERRAN_FACTORY };
-        case ABILITY_ID::TRAIN_DARKTEMPLAR:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAIN_DISRUPTOR:
-            return { UNIT_TYPEID::PROTOSS_ROBOTICSFACILITY };
-        case ABILITY_ID::TRAIN_DRONE:
-            return { UNIT_TYPEID::ZERG_HATCHERY, UNIT_TYPEID::ZERG_LAIR, UNIT_TYPEID::ZERG_HIVE };
-        case ABILITY_ID::TRAIN_GHOST:
-            return { UNIT_TYPEID::TERRAN_BARRACKSTECHLAB };
-        case ABILITY_ID::TRAIN_HELLBAT:
-            return { UNIT_TYPEID::TERRAN_FACTORY };
-        case ABILITY_ID::TRAIN_HELLION:
-            return { UNIT_TYPEID::TERRAN_FACTORY };
-        case ABILITY_ID::TRAIN_HIGHTEMPLAR:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAIN_HYDRALISK:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_IMMORTAL:
-            return { UNIT_TYPEID::PROTOSS_ROBOTICSFACILITY };
-        case ABILITY_ID::TRAIN_INFESTOR:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_LIBERATOR:
-            return { UNIT_TYPEID::TERRAN_STARPORT };
-        case ABILITY_ID::TRAIN_MARAUDER:
-            return { UNIT_TYPEID::TERRAN_BARRACKS };
-        case ABILITY_ID::TRAIN_MARINE:
-            return { UNIT_TYPEID::TERRAN_BARRACKS };
-        case ABILITY_ID::TRAIN_MEDIVAC:
-            return { UNIT_TYPEID::TERRAN_STARPORT };
-        case ABILITY_ID::TRAIN_MOTHERSHIP:
-            return { UNIT_TYPEID::PROTOSS_NEXUS };
-        case ABILITY_ID::TRAIN_MOTHERSHIPCORE:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_MUTALISK:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_OBSERVER:
-            return { UNIT_TYPEID::PROTOSS_ROBOTICSFACILITY };
-        case ABILITY_ID::TRAIN_ORACLE:
-            return { UNIT_TYPEID::PROTOSS_STARGATE };
-        case ABILITY_ID::TRAIN_OVERLORD:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_PHOENIX:
-            return { UNIT_TYPEID::PROTOSS_STARGATE };
-        case ABILITY_ID::TRAIN_PROBE:
-            return { UNIT_TYPEID::PROTOSS_NEXUS };
-        case ABILITY_ID::TRAIN_QUEEN:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_RAVEN:
-            return { UNIT_TYPEID::TERRAN_STARPORT };
-        case ABILITY_ID::TRAIN_REAPER:
-            return { UNIT_TYPEID::TERRAN_BARRACKS };
-        case ABILITY_ID::TRAIN_ROACH:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_SCV:
-            return { UNIT_TYPEID::TERRAN_COMMANDCENTER, UNIT_TYPEID::TERRAN_ORBITALCOMMAND, UNIT_TYPEID::TERRAN_PLANETARYFORTRESS };
-        case ABILITY_ID::TRAIN_SENTRY:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAIN_SIEGETANK:
-            return { UNIT_TYPEID::TERRAN_FACTORY };
-        case ABILITY_ID::TRAIN_STALKER:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAIN_SWARMHOST:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_TEMPEST:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_THOR:
-            return { UNIT_TYPEID::TERRAN_FACTORYTECHLAB };
-        case ABILITY_ID::TRAIN_ULTRALISK:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_VIKINGFIGHTER:
-            return { UNIT_TYPEID::TERRAN_STARPORT };
-        case ABILITY_ID::TRAIN_VIPER:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_VOIDRAY:
-            return { UNIT_TYPEID::INVALID };
-        case ABILITY_ID::TRAIN_WARPPRISM:
-            return { UNIT_TYPEID::PROTOSS_ROBOTICSFACILITY };
-        case ABILITY_ID::TRAIN_WIDOWMINE:
-            return { UNIT_TYPEID::TERRAN_FACTORYREACTOR };
-        case ABILITY_ID::TRAIN_ZEALOT:
-            return { UNIT_TYPEID::PROTOSS_GATEWAY };
-        case ABILITY_ID::TRAIN_ZERGLING:
-            return { UNIT_TYPEID::INVALID };
-        default:
-            cerr << AbilityTypeToName(ability) << endl;
-            throw invalid_argument("Not a train or build ability");
-    }*/
 }
 
 float maxHealth(sc2::UNIT_TYPEID type) {
@@ -672,14 +406,10 @@ float unitRadius(sc2::UNIT_TYPEID type) {
 }
 
 /** Maps an ability to the unit that is built or trained by that ability.
- * In particular this is defined for BUILD_* abilities.
+ * E.g. ABILITY_ID::BUILD_ARMORY -> UNIT_TYPEID::TERRAN_ARMORY
  */
 UNIT_TYPEID abilityToUnit(ABILITY_ID ability) {
     return mAbilityToCreatedUnit[(int)ability];
-    /*switch (ability) {
-        case ABILITY_ID::BUILD_ARMORY:
-            return UNIT_TYPEID::TERRAN_ARMORY;
-    }*/
 }
 
 UPGRADE_ID abilityToUpgrade(ABILITY_ID ability) {

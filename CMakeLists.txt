@@ -20,7 +20,7 @@ project(libvoxelbot)
 # include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/s2client-api/contrib/SDL-mirror/include")
 # include_directories("s2client-api/contrib/SDL-mirror/include")
 
-function (create_test project_name mainfile)
+function (create_executable project_name mainfile)
 	# TODO: The .h files don't seem to be necessary (think only .cpp files should be included here anyway)
     add_executable(${project_name} ${mainfile})
 
@@ -54,6 +54,7 @@ set(libvoxelbot_sources
     "libvoxelbot/utilities/python_utils.cpp"
     "libvoxelbot/utilities/renderer.cpp"
     "libvoxelbot/utilities/unit_data_caching.cpp"
+    "libvoxelbot/caching/dependency_analyzer.cpp"
 )
 
 add_library(libvoxelbot ${libvoxelbot_sources})
@@ -86,4 +87,5 @@ target_include_directories(libvoxelbot
 )
 
 
-create_test(test_combat_simulator "libvoxelbot/combat/simulator.test.cpp")
+create_executable(test_combat_simulator "libvoxelbot/combat/simulator.test.cpp")
+create_executable(cache_mappings "libvoxelbot/caching/caching.cpp")
