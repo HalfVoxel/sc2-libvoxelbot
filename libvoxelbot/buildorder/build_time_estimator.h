@@ -1,14 +1,16 @@
 #pragma once
-//#include <pybind11/embed.h>
-//#include <pybind11/stl.h>
 #include <vector>
 #include <libvoxelbot/utilities/mappings.h>
+#if LIBVOXELBOT_ENABLE_PYTHON
 #include <pybind11/pybind11.h>
+#endif
 
 struct BuildResources;
 
 struct BuildOptimizerNN {
+#if LIBVOXELBOT_ENABLE_PYTHON
     pybind11::object predictFunction;
+#endif
 
     void init();
 

@@ -8,49 +8,6 @@
 using namespace std;
 using namespace sc2;
 
-/*template<class Archive>
-void serialize(Archive & archive, DamageBonus& b) {
-    archive(b.attribute, b.bonus);
-}
-
-template<class Archive>
-void serialize(Archive & archive, Weapon& w) {
-    archive(w.type, w.damage_, w.damage_bonus, w.attacks, w.range, w.speed);
-}
-
-template<class Archive>
-void serialize(Archive & archive, UnitTypeData& u) {
-    archive(
-        u.unit_type_id, 
-        u.name, 
-        u.available, 
-        u.cargo_size, 
-        u.mineral_cost, 
-        u.vespene_cost, 
-        u.attributes, 
-        u.movement_speed, 
-        u.armor, 
-        u.weapons, 
-        u.food_required, 
-        u.food_provided, 
-        u.ability_id, 
-        u.race, 
-        u.build_time, 
-        u.has_minerals, 
-        u.has_vespene, 
-        u.sight_range, 
-        u.tech_alias, 
-        u.unit_alias, 
-        u.tech_requirement, 
-        u.require_attached
-    );
-}
-
-template<class Archive>
-void serialize(Archive & archive, UnitTypeID& u) {
-    archive();
-}*/
-
 void save_unit_data(const vector<UnitTypeData>& unit_types, string path) {
     auto stream = ofstream(path);
     stream << unit_types.size() << endl;

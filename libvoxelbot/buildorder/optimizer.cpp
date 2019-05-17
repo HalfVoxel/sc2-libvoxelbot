@@ -18,7 +18,9 @@
 
 using namespace std;
 using namespace sc2;
+#if LIBVOXELBOT_ENABLE_PYTHON
 using namespace pybind11::literals;
+#endif
 
 const BuildOrderFitness BuildOrderFitness::ReallyBad = { 100000, BuildResources(0,0), { 0, 0 }, { 0, 0 } };
 
@@ -124,13 +126,8 @@ BuildState::BuildState(const ObservationInterface* observation, Unit::Alliance a
                     // Assume the probe will be free in a few seconds
                     addEvent(BuildEvent(BuildEventType::MakeUnitAvailable, time + min(remainingTime, 4.0f), event.caster, sc2::ABILITY_ID::INVALID));
                 }
-                // if (event.ability == ABILITY_ID::MORPH_WARPGATE) {
-                //     cout << "Got morph ability on " << UnitTypeToName(ourUnits[i]->unit_type) << " " << UnitTypeToName(createdUnit) << endl;
-                //     // Just make the unit busy instead otherwise the simulator will crash when it cannot find a gateway to remove when the ability is finished
-                //     addEvent(BuildEvent(BuildEventType::MakeUnitAvailable, event.time, event.caster, sc2::ABILITY_ID::INVALID));
-                // } else {
+
                 addEvent(event);
-                // }
             }
 
             // Only process the first order (this bot should never have more than one anyway)
@@ -1528,7 +1525,9 @@ void printMiningSpeedFuture(const BuildState& startState) {
         "#002DC0",
         "#003ABF",
     };
+#if LIBVOXELBOT_ENABLE_PYTHON
     pybind11::module::import("matplotlib.pyplot").attr("plot")(times, minerals, "color"_a=colors[miningSpeedFutureColor % colors.size()]);
+#endif
     // pybind11::module::import("matplotlib.pyplot").attr("scatter")(times, vespene);
 }
 
@@ -1940,10 +1939,6 @@ pair<BuildOrder, BuildOrderFitness> findBestBuildOrderGenetic(const BuildState& 
 
         swap(generation, nextGeneration);
 
-        // if ((i % 10) == 0) cout << "Best fitness " << fitness[indices[0]] << endl;
-        // calculateFitness(startState, uniqueStartingUnits, availableUnitTypes, generation[indices[0]]);
-
-        
         // Note: locallyOptimizeGene *can* in some cases make the score worse.
         // In particular it always removes non-essential items at the end of the build order which can make it worse (this is kinda a bug though)
         // assert(lastBestFitness <= fitness[indices[0]].score());
@@ -1952,59 +1947,8 @@ pair<BuildOrder, BuildOrderFitness> findBestBuildOrderGenetic(const BuildState& 
     
     generation[0] = locallyOptimizeGene(startState, startingUnitCounts, startingAddonCountPerUnitType, availableUnitTypes, actionRequirements, generation[0]);
 
-    if (false) {
-        auto indices = vector<int>(generation.size());
-        auto fitness = vector<BuildOrderFitness>(generation.size());
-        for (int j = 0; j < generation.size(); j++) {
-            indices[j] = j;
-            fitness[j] = calculateFitness(startState, startingUnitCounts, startingAddonCountPerUnitType, availableUnitTypes, generation[j]);
-        }
-
-        sortByValueDescending<int, float>(indices, [=](int index) { return -fitness[index].time; });
-        for (auto index : indices) {
-            cout << index << " " << fitness[index].time << endl;
-        }
-        cout << endl;
-        sortByValueDescendingBubble<int, BuildOrderFitness>(indices, [=](int index) { return fitness[index]; });
-        for (auto index : indices) {
-            cout << index << " " << fitness[index].time << endl;
-        }
-        
-        miningSpeedFutureColor = 0;
-        assert(indices[0] == 0);
-        for (auto index : indices) {
-            auto bo = generation[index].constructBuildOrder(startState.race, startState.foodAvailableInFuture(), startingUnitCounts, startingAddonCountPerUnitType, availableUnitTypes);
-            printBuildOrderDetailed(startState, bo);
-            miningSpeedFutureColor++;
-        }
-        pybind11::module::import("matplotlib.pyplot").attr("show")();
-    }
-    // cout << "Best fitness " << calculateFitness(startState, startingUnitCounts, startingAddonCountPerUnitType, availableUnitTypes, generation[0]) << endl;
-    // printBuildOrder(generation[0].constructBuildOrder(startState.foodAvailable(), startingUnitCounts, availableUnitTypes));
-    // printBuildOrderDetailed(startState, generation[0].constructBuildOrder(startState.race, startState.foodAvailable(), startingUnitCounts, startingAddonCountPerUnitType, availableUnitTypes));
     auto fitness = calculateFitness(startState, startingUnitCounts, startingAddonCountPerUnitType, availableUnitTypes, generation[0]);
 
-    // for(auto u : startState.units) {
-    //     cout << "Starting unit " << UnitTypeToName(u.type) << " x" << u.units << endl;
-    // }
-    // cout << "Implicit build order" << endl;
-    // for (auto u : generation[0].buildOrder) {
-    //     cout << availableUnitTypes.getBuildOrderItem(u.type).name() << endl;
-    // }
-    // cout << endl;
-    // cout << "Explicit build order" << endl;
-    // for (auto u : generation[0].constructBuildOrder(startState.race, startState.foodAvailableInFuture(), startingUnitCounts, startingAddonCountPerUnitType, availableUnitTypes).items) {
-    //     cout << u.name() << endl;
-    // }
-
-    /*stack<BuildOrderItem> reqs;
-    traceDependencies(startingUnitCounts, availableUnitTypes, reqs, UNIT_TYPEID::PROTOSS_GATEWAY);
-    cout << "Reqs " << reqs.size() << endl;
-    while(!reqs.empty()) {
-        auto u = reqs.top();
-        reqs.pop();
-        cout << "Req " << UnitTypeToName(u.typeID()) << endl;
-    }*/
     return make_pair(generation[0].constructBuildOrder(startState.race, startState.foodAvailableInFuture(), startingUnitCounts, startingAddonCountPerUnitType, availableUnitTypes), fitness);
 }
 
@@ -2357,7 +2301,7 @@ void unitTestBuildOptimizer() {
             // for (auto& item : buildOrderProBO3.items) item.chronoBoosted = false;
             // printBuildOrderDetailed(startState, buildOrderProBO3);
 
-            pybind11::module::import("matplotlib.pyplot").attr("show")();
+            // pybind11::module::import("matplotlib.pyplot").attr("show")();
             /*vector<UNIT_TYPEID> bo = {
                 UNIT_TYPEID::PROTOSS_PROBE,
                 UNIT_TYPEID::PROTOSS_PROBE,

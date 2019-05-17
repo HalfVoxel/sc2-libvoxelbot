@@ -4,6 +4,8 @@
 #include <libvoxelbot/utilities/stdutils.h>
 #include <limits>
 #include <vector>
+#include <bitset>
+#include <array>
 
 struct AvailableUnitTypes;
 struct BuildState;
@@ -55,11 +57,6 @@ struct CombatUpgrades {
 
 	uint64_t hash() const {
 		return std::hash<std::bitset<90>>()(upgrades);
-		// uint64_t h = 0;
-		// for (auto u : upgrades) {
-		// 	h = h * 31 ^ (uint64_t)u;
-		// }
-		// return h;
 	}
 
 	void add(sc2::UPGRADE_ID upgrade);

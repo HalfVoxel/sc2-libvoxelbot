@@ -33,6 +33,9 @@ set_property(TARGET libvoxelbot PROPERTY CXX_STANDARD 14)
 set_property(TARGET libvoxelbot PROPERTY CXX_STANDARD_REQUIRED ON)
 target_compile_options(libvoxelbot PRIVATE -Wall -Wextra -Wmissing-field-initializers -Wuninitialized -Wsometimes-uninitialized)
 
+# Enable pybind11 bindings
+target_compile_definitions(libvoxelbot PUBLIC LIBVOXELBOT_ENABLE_PYTHON=1)
+
 target_include_directories(libvoxelbot
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/>
