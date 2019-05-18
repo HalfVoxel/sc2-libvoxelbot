@@ -1,6 +1,7 @@
 #include <libvoxelbot/combat/combat_environment.h>
 #include <libvoxelbot/combat/simulator.h>
 #include <libvoxelbot/utilities/predicates.h>
+#include <iostream>
 
 using namespace std;
 using namespace sc2;

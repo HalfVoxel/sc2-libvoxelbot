@@ -288,7 +288,7 @@ git clone --recursive <this repository>
 In your CMakeLists.txt file add the following:
 
 ```CMake
-add_subdirectory("libvoxelbot")
+add_subdirectory("sc2-libvoxelbot")
 ```
 
 and make sure to link with `libvoxelbot`

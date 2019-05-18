@@ -61,14 +61,15 @@ add_library(libvoxelbot ${libvoxelbot_sources})
 
 # Sets the grouping in IDEs like visual studio (last parameter is the group name)
 set_target_properties(libvoxelbot PROPERTIES FOLDER target)
-target_link_libraries(libvoxelbot sc2api sc2lib sc2utils pybind11)
+target_link_libraries(libvoxelbot sc2api sc2lib sc2utils)
 # Require C++14
 set_property(TARGET libvoxelbot PROPERTY CXX_STANDARD 14)
 set_property(TARGET libvoxelbot PROPERTY CXX_STANDARD_REQUIRED ON)
 target_compile_options(libvoxelbot PRIVATE -Wall -Wextra -Wmissing-field-initializers -Wuninitialized -Wsometimes-uninitialized)
 
 # Enable pybind11 bindings
-target_compile_definitions(libvoxelbot PUBLIC LIBVOXELBOT_ENABLE_PYTHON=1)
+target_compile_definitions(libvoxelbot PUBLIC LIBVOXELBOT_ENABLE_PYTHON=0)
+# target_link_libraries(libvoxelbot pybind11)
 
 target_include_directories(libvoxelbot
     PUBLIC
