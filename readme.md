@@ -31,6 +31,10 @@ It does *not* take the following effects into account:
 
 The simulator is pretty fast. It can simulate on the order of tens of thousands of battles per second. The performance does of course depend on the number of units in the fight and how long the fight continues for.
 
+The image below shows 4 battles as simulated in the combat simulator and the ground truth when running in Starcraft 2.
+
+![Comparion of combat simulator vs ground truth](docs/images/combat.png)
+
 ### Simple example
 ```C++
 initMappings();
