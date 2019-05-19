@@ -151,7 +151,7 @@ The build order optimizer can find a highly optimized build order for producing 
 - Takes on the order of half a second to run. The number of iterations can be lowered/increased to adjust the quality/time trade-off.
 - Does not optimize for the absolutely shortest build order by default, but optimizes for a good economy as well.
 - Can take both units and upgrades as requirements.
-- 
+  
 ### Simple example
 
 This example shows how to generate a build order from a given starting state.
