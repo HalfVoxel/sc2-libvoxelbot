@@ -20,6 +20,8 @@ project(libvoxelbot)
 # include_directories(SYSTEM "${CMAKE_SOURCE_DIR}/s2client-api/contrib/SDL-mirror/include")
 # include_directories("s2client-api/contrib/SDL-mirror/include")
 
+set(LIBVOXELBOT_ENABLE_PYTHON 0)
+
 function (create_executable project_name mainfile)
 	# TODO: The .h files don't seem to be necessary (think only .cpp files should be included here anyway)
     add_executable(${project_name} ${mainfile})
@@ -31,7 +33,10 @@ function (create_executable project_name mainfile)
 		# set_target_properties(${project_name} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:libcmt;libconcrt")
 	endif ()
 
-    target_link_libraries(${project_name} sc2api sc2lib sc2utils pybind11::embed libvoxelbot)
+    target_link_libraries(${project_name} sc2api sc2lib sc2utils libvoxelbot)
+    if (LIBVOXELBOT_ENABLE_PYTHON)
+        target_link_libraries(${project_name} pybind11::embed)
+    endif()
 endfunction ()
 
 # Note: trying to add SDL2-static as the extra_libs parameter here causes pybind11 modules to fail to link (for unknown reasons, maybe PIC related?)
@@ -68,7 +73,7 @@ set_property(TARGET libvoxelbot PROPERTY CXX_STANDARD_REQUIRED ON)
 target_compile_options(libvoxelbot PRIVATE -Wall -Wextra -Wmissing-field-initializers -Wuninitialized -Wsometimes-uninitialized)
 
 # Enable pybind11 bindings
-target_compile_definitions(libvoxelbot PUBLIC LIBVOXELBOT_ENABLE_PYTHON=0)
+target_compile_definitions(libvoxelbot PUBLIC LIBVOXELBOT_ENABLE_PYTHON=${LIBVOXELBOT_ENABLE_PYTHON})
 # target_link_libraries(libvoxelbot pybind11)
 
 target_include_directories(libvoxelbot

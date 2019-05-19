@@ -10,26 +10,28 @@ int combatWinner(const CombatPredictor& predictor, const CombatState& state) {
     return predictor.predict_engage(state).state.owner_with_best_outcome();
 }
 
+const double PI = 3.141592653589793238462643383279502884;
+
 void unitTestSurround() {
     // One unit can be surrounded by 6 melee units and attacked by all 6 at the same time
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * M_PI * 1, 1).maxAttackersPerDefender == 6);
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * M_PI * 1, 1).maxMeleeAttackers == 6);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * PI * 1, 1).maxAttackersPerDefender == 6);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * PI * 1, 1).maxMeleeAttackers == 6);
 
     // Two units can be surrounded by 8 melee units, but each one can only be attacked by at most 4
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * M_PI * 2, 2).maxAttackersPerDefender == 4);
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * M_PI * 2, 2).maxMeleeAttackers == 8);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * PI * 2, 2).maxAttackersPerDefender == 4);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * PI * 2, 2).maxMeleeAttackers == 8);
 
     // Two units can be surrounded by 9 melee units, but each one can only be attacked by at most 3
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * M_PI * 3, 3).maxAttackersPerDefender == 3);
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * M_PI * 3, 3).maxMeleeAttackers == 9);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * PI * 3, 3).maxAttackersPerDefender == 3);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * PI * 3, 3).maxMeleeAttackers == 9);
 
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * M_PI * 4, 4).maxAttackersPerDefender == 3);
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * M_PI * 4, 4).maxMeleeAttackers == 10);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * PI * 4, 4).maxAttackersPerDefender == 3);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * PI * 4, 4).maxMeleeAttackers == 10);
 
     // One thor can be attacked by 10 melee units at a time.
     // This seems to be slightly incorrect, the real number is only 9, but it's approximately correct at least
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_THOR), 2) * M_PI * 1, 1).maxAttackersPerDefender == 10);
-    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_THOR), 2) * M_PI * 1, 1).maxMeleeAttackers == 10);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_THOR), 2) * PI * 1, 1).maxAttackersPerDefender == 10);
+    assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_THOR), 2) * PI * 1, 1).maxMeleeAttackers == 10);
 }
 
 int main() {
