@@ -970,13 +970,6 @@ CombatUnit makeUnit(int owner, UNIT_TYPEID type) {
     return unit;
 }
 
-static void createState(DebugInterface* debug, const CombatState& state, float offset = 0) {
-    if (!debug) return;
-    for (auto& u : state.units) {
-        debug->DebugCreateUnit(u.type, Point2D(40 + 20 * (u.owner == 1 ? -1 : 1), 20 + offset), u.owner);
-    }
-}
-
 struct CompositionGene {
 //    private:
     // Indices are into the availableUnitTypes list

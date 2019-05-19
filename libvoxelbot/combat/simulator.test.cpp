@@ -12,6 +12,13 @@ int combatWinner(const CombatPredictor& predictor, const CombatState& state) {
 
 const double PI = 3.141592653589793238462643383279502884;
 
+// static void createState(DebugInterface* debug, const CombatState& state, float offset = 0) {
+//     if (!debug) return;
+//     for (auto& u : state.units) {
+//         debug->DebugCreateUnit(u.type, Point2D(40 + 20 * (u.owner == 1 ? -1 : 1), 20 + offset), u.owner);
+//     }
+// }
+
 void unitTestSurround() {
     // One unit can be surrounded by 6 melee units and attacked by all 6 at the same time
     assert(maxSurround(pow(unitRadius(UNIT_TYPEID::TERRAN_MARINE), 2) * PI * 1, 1).maxAttackersPerDefender == 6);
