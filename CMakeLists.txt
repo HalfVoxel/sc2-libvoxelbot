@@ -70,7 +70,7 @@ target_link_libraries(libvoxelbot sc2api sc2lib sc2utils)
 # Require C++14
 set_property(TARGET libvoxelbot PROPERTY CXX_STANDARD 14)
 set_property(TARGET libvoxelbot PROPERTY CXX_STANDARD_REQUIRED ON)
-target_compile_options(libvoxelbot PRIVATE -Wall -Wextra -Wmissing-field-initializers -Wuninitialized -Wsometimes-uninitialized)
+target_compile_options(libvoxelbot PRIVATE -Wall -Wmissing-field-initializers -Wuninitialized -Wsometimes-uninitialized)
 
 # Enable pybind11 bindings
 target_compile_definitions(libvoxelbot PUBLIC LIBVOXELBOT_ENABLE_PYTHON=${LIBVOXELBOT_ENABLE_PYTHON})
