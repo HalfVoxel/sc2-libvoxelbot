@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.1)
 
 project(libvoxelbot)
 
+add_subdirectory("cereal")
+add_subdirectory("s2client-api")
+
 # PYTHON_EXECUTABLE
 
 # Use bin as the directory for all executables.
@@ -70,18 +73,21 @@ target_link_libraries(libvoxelbot sc2api sc2lib sc2utils)
 # Require C++14
 set_property(TARGET libvoxelbot PROPERTY CXX_STANDARD 14)
 set_property(TARGET libvoxelbot PROPERTY CXX_STANDARD_REQUIRED ON)
-target_compile_options(libvoxelbot PRIVATE -Wall -Wmissing-field-initializers -Wuninitialized -Wsometimes-uninitialized)
+# target_compile_options(libvoxelbot PRIVATE -Wall)
 
 # Enable pybind11 bindings
 target_compile_definitions(libvoxelbot PUBLIC LIBVOXELBOT_ENABLE_PYTHON=${LIBVOXELBOT_ENABLE_PYTHON})
 # target_link_libraries(libvoxelbot pybind11)
 
+# Multithreaded builds
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+
 target_include_directories(libvoxelbot
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../s2client-api/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../s2client-api/examples/common> # TODO: Remove?
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../s2client-api/contrib/SDL-mirror/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/s2client-api/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/s2client-api/examples/common> # TODO: Remove?
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/s2client-api/contrib/SDL-mirror/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cereal/include>
         src/generated
 )
@@ -89,7 +95,7 @@ target_include_directories(libvoxelbot
 target_include_directories(libvoxelbot
     SYSTEM
     PUBLIC
-        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/../s2client-api/generated>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/s2client-api/generated>
 )
 
 
