@@ -10,7 +10,7 @@ int combatWinner(const CombatPredictor& predictor, const CombatState& state) {
     return predictor.predict_engage(state).state.owner_with_best_outcome();
 }
 
-const double PI = 3.141592653589793238462643383279502884;
+const static double PI = 3.141592653589793238462643383279502884;
 
 // static void createState(DebugInterface* debug, const CombatState& state, float offset = 0) {
 //     if (!debug) return;

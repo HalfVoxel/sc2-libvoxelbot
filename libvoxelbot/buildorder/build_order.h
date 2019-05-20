@@ -87,8 +87,8 @@ struct BuildOrder {
         return items[index];
     }
 
-    std::vector<const BuildOrderItem>::const_iterator begin() const { return items.begin(); }
-	std::vector<const BuildOrderItem>::const_iterator end() const { return items.end(); }
+    std::vector<BuildOrderItem>::const_iterator begin() const { return items.begin(); }
+	std::vector<BuildOrderItem>::const_iterator end() const { return items.end(); }
     std::vector<BuildOrderItem>::iterator begin() { return items.begin(); }
 	std::vector<BuildOrderItem>::iterator end() { return items.end(); }
 

@@ -18,6 +18,8 @@
 using namespace std;
 using namespace sc2;
 
+const static double PI = 3.141592653589793238462643383279502884;
+
 string CombatState::toString() {
     stringstream ss;
     ss << "Owner Unit       Health" << endl;
@@ -209,12 +211,12 @@ SurroundInfo maxSurround(float enemyGroundUnitArea, int enemyGroundUnits) {
     // Assume a packing density of about 60% (circles have a packing density of about 90%)
     if (enemyGroundUnits > 1)
         enemyGroundUnitArea /= 0.6;
-    float radius = sqrt(enemyGroundUnitArea / M_PI);
+    float radius = sqrt(enemyGroundUnitArea / PI);
 
     float representativeMeleeUnitRadius = unitRadius(UNIT_TYPEID::PROTOSS_ZEALOT);
 
-    float circumferenceDefenders = radius * (2 * M_PI);
-    float circumferenceAttackers = (radius + representativeMeleeUnitRadius) * (2 * M_PI);
+    float circumferenceDefenders = radius * (2 * PI);
+    float circumferenceAttackers = (radius + representativeMeleeUnitRadius) * (2 * PI);
 
     float approximateDefendersInMeleeRange = min((float)enemyGroundUnits, circumferenceDefenders / (2 * representativeMeleeUnitRadius));
     float approximateAttackersInMeleeRange = circumferenceAttackers / (2 * representativeMeleeUnitRadius);
@@ -382,8 +384,8 @@ CombatResult CombatPredictor::predict_engage(const CombatState& inputState, Comb
         // range of the defenders (assuming they are clumped up) and a given defender can only be attacked
         // by a small number of attackers.
         // Note that the parameters are for the enemy data.
-        SurroundInfo surroundInfo1 = maxSurround(groundArea2 * M_PI, hasGround2);
-        SurroundInfo surroundInfo2 = maxSurround(groundArea1 * M_PI, hasGround1);
+        SurroundInfo surroundInfo1 = maxSurround(groundArea2 * PI, hasGround2);
+        SurroundInfo surroundInfo2 = maxSurround(groundArea1 * PI, hasGround1);
 
         // Use a finer timestep for earlier times in the simulation
         // and make it coarser over time. This ensures that even very long simulations can be evaluated in a reasonable time.
@@ -395,7 +397,7 @@ CombatResult CombatPredictor::predict_engage(const CombatState& inputState, Comb
         // Check guardian shields.
         // Guardian shield is approximated as each shield protecting a fixed area of units as long
         // as the shield is active. The first N units in each army, such that the total area of all units up to unit N, are assumed to be protected
-        const float GuardianShieldUnits = 4.5f*4.5f*M_PI * 0.4f;
+        const float GuardianShieldUnits = 4.5f*4.5f*PI * 0.4f;
         // Number of units in each army that are shielded by the guardian shield
         array<float, 2> guardianShieldedUnitFraction = {{ 0, 0 }};
         array<bool, 2> guardianShieldCoversAllUnits = {{ false, false }};
@@ -413,7 +415,7 @@ CombatResult CombatPredictor::predict_engage(const CombatState& inputState, Comb
             float totalArea = 0;
             for (size_t i = 0; i < g.size(); i++) {
                 float r = unitRadius(g[i]->type);
-                totalArea += r*r*M_PI;
+                totalArea += r*r*PI;
             }
 
             guardianShieldCoversAllUnits[group] = guardianShieldedArea > totalArea;
@@ -428,7 +430,7 @@ CombatResult CombatPredictor::predict_engage(const CombatState& inputState, Comb
             SurroundInfo surround = group == 0 ? surroundInfo1 : surroundInfo2;
             // The melee units furthest back in the group have to move around the whole group and around the whole enemy group
             // (very very approximative)
-            float maxExtraMeleeDistance = sqrt(groundArea1 / M_PI) * M_PI + sqrt(groundArea2 / M_PI) * M_PI;
+            float maxExtraMeleeDistance = sqrt(groundArea1 / PI) * PI + sqrt(groundArea2 / PI) * PI;
 
             int numMeleeUnitsUsed = 0;
             bool didActivateGuardianShield = false;
