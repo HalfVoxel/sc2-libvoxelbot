@@ -274,24 +274,21 @@ BuildState state(observation, Unit::Alliance::Self, Race::Protoss, resources, ti
 
 ## Using the precompiled library
 
-Download the precompiled library and add it to your project.
+Requirements:
+- C++14
+- [s2client-api](https://github.com/Blizzard/s2client-api)
 
-Clone this repository
+Download the precompiled library (see [latest release](https://github.com/HalfVoxel/sc2-libvoxelbot/releases/latest)).
+Unzip the compressed folder. Inside there are two folders: include and lib.
+Add either the release or debug library in the lib folder to your project's linker settings.
+Add the include directory to your project's list of include directories.
 
-```bash
-git clone --recursive <this repository>
-```
-
-Add the root folder of repository to your include path in your project settings.
-
-Done!
+After you have done this you should be good to go. Assuming your project already uses the s2client-api library and links against it.
 
 ## Building
 
 Requirements:
 - C++14
-- [s2client-api](https://github.com/Blizzard/s2client-api)
-- [cereal](https://github.com/USCiLab/cereal)
 
 ```bash
 git clone --recursive <this repository>
