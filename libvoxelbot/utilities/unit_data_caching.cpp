@@ -1,5 +1,8 @@
 #include <libvoxelbot/utilities/unit_data_caching.h>
 #include <libvoxelbot/utilities/sc2_serialization.h>
+#include <libvoxelbot/generated/units_data.h>
+#include <libvoxelbot/generated/upgrades_data.h>
+#include <libvoxelbot/generated/abilities_data.h>
 #include <string>
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/string.hpp>
@@ -67,7 +70,8 @@ void save_unit_data(const vector<UnitTypeData>& unit_types, string path) {
 }
 
 std::vector<sc2::UnitTypeData> load_unit_data() {
-    auto stream = ifstream(UNIT_DATA_CACHE_PATH);
+    // auto stream = ifstream(UNIT_DATA_CACHE_PATH);
+	auto stream = stringstream(string((char*)LIBVOXELBOT_DATA_UNITS, LIBVOXELBOT_DATA_UNITS_SIZE));
     if (!stream) {
         cerr << "Could not open unit data cache file at " << UNIT_DATA_CACHE_PATH << endl;
         exit(1);
@@ -146,7 +150,7 @@ std::vector<sc2::UnitTypeData> load_unit_data() {
         type.tech_requirement = (UNIT_TYPEID)tech_req;
         stream >> type.require_attached;
     }
-    stream.close();
+    //stream.close();
 
     // Some sanity checks
     assert(unit_types[(int)UNIT_TYPEID::ZERG_OVERLORD].food_provided == 8);
@@ -229,7 +233,8 @@ void save_ability_data(vector<AbilityData> abilities) {
 }
 
 std::vector<sc2::AbilityData> load_ability_data() {
-    std::ifstream file(ABILITY_DATA_CACHE_PATH, std::ios::binary);
+	auto file = stringstream(string((char*)LIBVOXELBOT_DATA_ABILITIES, LIBVOXELBOT_DATA_ABILITIES_SIZE));
+    // std::ifstream file(ABILITY_DATA_CACHE_PATH, std::ios::binary);
     if (!file) {
         cerr << "Could not open unit data cache file at " << ABILITY_DATA_CACHE_PATH << endl;
         exit(1);
@@ -240,7 +245,7 @@ std::vector<sc2::AbilityData> load_ability_data() {
         cereal::BinaryInputArchive archive(file);
         archive(abilities2);
     }
-    file.close();
+    //file.close();
 
     vector<AbilityData> abilities;
     for (auto& a : abilities2) {
@@ -278,7 +283,8 @@ void save_upgrade_data(vector<UpgradeData> upgrades) {
 }
 
 std::vector<sc2::UpgradeData> load_upgrade_data() {
-    std::ifstream file(UPGRADE_DATA_CACHE_PATH, std::ios::binary);
+	auto file = stringstream(string((char*)LIBVOXELBOT_DATA_UPGRADES, LIBVOXELBOT_DATA_UPGRADES_SIZE));
+    // std::ifstream file(UPGRADE_DATA_CACHE_PATH, std::ios::binary);
     if (!file) {
         cerr << "Could not open upgrade data cache file at " << UPGRADE_DATA_CACHE_PATH << endl;
         exit(1);
@@ -289,6 +295,6 @@ std::vector<sc2::UpgradeData> load_upgrade_data() {
         cereal::BinaryInputArchive archive(file);
         archive(upgrades);
     }
-    file.close();
+    //file.close();
     return upgrades;
 }

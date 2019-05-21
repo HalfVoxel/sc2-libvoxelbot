@@ -2,8 +2,15 @@ cmake_minimum_required(VERSION 3.1)
 
 project(libvoxelbot)
 
+include("${CMAKE_CURRENT_SOURCE_DIR}/bin2sh.cmake.txt")
+bin2h(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/libvoxelbot/generated/units.data" HEADER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/libvoxelbot/generated/units_data.h" VARIABLE_NAME "LIBVOXELBOT_DATA_UNITS")
+bin2h(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/libvoxelbot/generated/upgrades.bin" HEADER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/libvoxelbot/generated/upgrades_data.h" VARIABLE_NAME "LIBVOXELBOT_DATA_UPGRADES")
+bin2h(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/libvoxelbot/generated/abilities.bin" HEADER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/libvoxelbot/generated/abilities_data.h" VARIABLE_NAME "LIBVOXELBOT_DATA_ABILITIES")
+
+
 add_subdirectory("cereal")
 add_subdirectory("s2client-api")
+
 
 # PYTHON_EXECUTABLE
 
@@ -65,6 +72,8 @@ set(libvoxelbot_sources
     "libvoxelbot/caching/dependency_analyzer.cpp"
 )
 
+
+
 add_library(libvoxelbot ${libvoxelbot_sources})
 
 # Sets the grouping in IDEs like visual studio (last parameter is the group name)
@@ -89,6 +98,7 @@ target_include_directories(libvoxelbot
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/s2client-api/examples/common> # TODO: Remove?
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/s2client-api/contrib/SDL-mirror/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cereal/include>
+	PRIVATE
         src/generated
 )
 

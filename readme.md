@@ -272,6 +272,20 @@ float time = ticksToSeconds(observation->GetGameLoop());
 BuildState state(observation, Unit::Alliance::Self, Race::Protoss, resources, time));
 ```
 
+## Using the precompiled library
+
+Download the precompiled library and add it to your project.
+
+Clone this repository
+
+```bash
+git clone --recursive <this repository>
+```
+
+Add the root folder of repository to your include path in your project settings.
+
+Done!
+
 ## Building
 
 Requirements:
@@ -279,20 +293,24 @@ Requirements:
 - [s2client-api](https://github.com/Blizzard/s2client-api)
 - [cereal](https://github.com/USCiLab/cereal)
 
-This library assumes that you are including it together with a SC2 bot that already uses the [sc2client-api](https://github.com/Blizzard/s2client-api) and already builds it as part of your CMake file.
-
 ```bash
 git clone --recursive <this repository>
+cd sc2-libvoxelbot
+mkdir build
+cd build
+cmake ..
+
+# The above will generate project files for you.
+# Which type depends on which platform you are using.
+# On Windows it will for example generate a Visual Studio project which you can then build.
 ```
 
-In your CMakeLists.txt file add the following:
+When everything is built you can execute one of the tests
 
-```CMake
-add_subdirectory("sc2-libvoxelbot")
-```
+```bash
+# Unix/Mac
+./build/bin/example_combat_simulator
 
-and make sure to link with `libvoxelbot`
-
-```CMake
-target_link_libraries(mybot PUBLIC libvoxelbot)
+# Windows
+./build/Release/example_combat_simulator.exe
 ```
