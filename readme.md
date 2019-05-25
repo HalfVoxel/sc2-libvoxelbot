@@ -278,10 +278,13 @@ Requirements:
 - C++14
 - [s2client-api](https://github.com/Blizzard/s2client-api)
 
-Download the precompiled library (see [latest release](https://github.com/HalfVoxel/sc2-libvoxelbot/releases/latest)).
-Unzip the compressed folder. Inside there are two folders: include and lib.
-Add either the release or debug library in the lib folder to your project's linker settings.
-Add the include directory to your project's list of include directories.
+Steps
+- Download the precompiled library (see [latest release](https://github.com/HalfVoxel/sc2-libvoxelbot/releases/latest)).
+- Unzip the compressed folder. Inside there are two folders: include and lib.
+- Add the include directory to your project's list of include directories.
+- Add either the release or debug library in the lib folder to your project's linker settings.
+  In Visual Studio this is done in the Project Properties -> Linker -> Input -> Additional Dependencies setting.
+  In CMake you use the `target_link_libraries` command.
 
 After you have done this you should be good to go. Assuming your project already uses the s2client-api library and links against it.
 
