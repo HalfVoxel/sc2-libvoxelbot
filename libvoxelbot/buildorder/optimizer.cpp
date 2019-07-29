@@ -1340,7 +1340,7 @@ void unitTestBuildOptimizer() {
 
             BuildOptimizerParams params;
             params.iterations = 1024;
-            auto bo = findBestBuildOrderGenetic(startState, { { UNIT_TYPEID::PROTOSS_ADEPT, 23 } }, nullptr, params);
+            auto bo = findBestBuildOrderGenetic(startState, vector<pair<UNIT_TYPEID, int>> { { UNIT_TYPEID::PROTOSS_ADEPT, 23 } }, nullptr, params);
             printBuildOrderDetailed(startState, bo);
 
             
@@ -1666,7 +1666,7 @@ void unitTestBuildOptimizer() {
         for (int i = 1; i < 5; i++) {
             BuildOptimizerParams params;
             params.iterations = i*100;
-            auto bo = findBestBuildOrderGenetic(startState, { { UNIT_TYPEID::PROTOSS_VOIDRAY, 1 } }, nullptr, params);
+            auto bo = findBestBuildOrderGenetic(startState, vector<pair<UNIT_TYPEID, int>> { { UNIT_TYPEID::PROTOSS_VOIDRAY, 1 } }, nullptr, params);
             printBuildOrderDetailed(startState, bo);
             // cout << "Build order score " << boTuple.second.score() << endl;
         }
@@ -1736,7 +1736,7 @@ void unitTestBuildOptimizer() {
         // startState.baseInfos = { BaseInfo(10800, 1000, 1000) };
         BuildOptimizerParams params;
         params.iterations = 1024;
-        auto bo = findBestBuildOrderGenetic(startState, { { UNIT_TYPEID::PROTOSS_VOIDRAY, 1 }, { UNIT_TYPEID::PROTOSS_ZEALOT, 5 } }, nullptr, params);
+        auto bo = findBestBuildOrderGenetic(startState, vector<pair<UNIT_TYPEID, int>> { { UNIT_TYPEID::PROTOSS_VOIDRAY, 1 }, { UNIT_TYPEID::PROTOSS_ZEALOT, 5 } }, nullptr, params);
         printBuildOrderDetailed(startState, bo);
         // cout << "Build order score " << boTuple.second.score() << endl;
 
