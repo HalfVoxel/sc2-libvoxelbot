@@ -303,6 +303,9 @@ cmake ..
 # The above will generate project files for you.
 # Which type depends on which platform you are using.
 # On Windows it will for example generate a Visual Studio project which you can then build.
+# On linux/mac you can now write
+make -j8 
+# to build the library (the -j8 parameter makes it use a multithreaded build, so it goes faster)
 ```
 
 When everything is built you can execute one of the tests
