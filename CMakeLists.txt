@@ -8,7 +8,7 @@ bin2h(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/libvoxelbot/generated/upgrades.bi
 bin2h(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/libvoxelbot/generated/abilities.bin" HEADER_FILE "${CMAKE_CURRENT_SOURCE_DIR}/libvoxelbot/generated/abilities_data.h" VARIABLE_NAME "LIBVOXELBOT_DATA_ABILITIES")
 
 
-add_subdirectory("cereal")
+# add_subdirectory("cereal")
 add_subdirectory("s2client-api")
 
 
