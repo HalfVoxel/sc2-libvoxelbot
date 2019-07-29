@@ -89,7 +89,9 @@ target_compile_definitions(libvoxelbot PUBLIC LIBVOXELBOT_ENABLE_PYTHON=${LIBVOX
 # target_link_libraries(libvoxelbot pybind11)
 
 # Multithreaded builds
-add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+if (MSVC)
+    add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+endif ()
 
 target_include_directories(libvoxelbot
     PUBLIC
